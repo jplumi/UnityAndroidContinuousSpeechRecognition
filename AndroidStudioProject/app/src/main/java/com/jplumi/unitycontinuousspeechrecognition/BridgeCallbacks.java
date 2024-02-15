@@ -1,6 +1,7 @@
 package com.jplumi.unitycontinuousspeechrecognition;
 
 public interface BridgeCallbacks {
-    void OnError();
-    void OnPartialResult(String result);
+    void onError(String error);
+    void onPartialResults(String result);
+    void onReady();
 }
