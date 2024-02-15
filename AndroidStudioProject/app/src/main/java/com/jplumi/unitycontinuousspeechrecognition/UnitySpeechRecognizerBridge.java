@@ -40,7 +40,6 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
             @Override
             public void run() {
                 speech.startListening(recognizerIntent);
-                Log.i(LOG_TAG, "START LISTENING ===========");
             }
         });
     }
@@ -73,7 +72,7 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, language);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, maxResults);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_RESULTS, false);
+//        recognizerIntent.putExtra(RecognizerIntent.EXTRA_RESULTS, true);
     }
 
 //    public static MainActivity currentActivity = null;
@@ -100,7 +99,6 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
     private void turnOf(){
         speech.stopListening();
         speech.destroy();
-        Log.i(LOG_TAG, "STOP LISTENING ===========");
     }
 
 //    @Override
@@ -140,12 +138,12 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        Log.i(LOG_TAG, "onReadyForSpeech");
+//        Log.i(LOG_TAG, "onReadyForSpeech");
     }
 
     @Override
     public void onBeginningOfSpeech() {
-        Log.i(LOG_TAG, "onBeginningOfSpeech");
+//        Log.i(LOG_TAG, "onBeginningOfSpeech");
     }
 
     @Override
@@ -158,13 +156,13 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
     @Override
     public void onBufferReceived(byte[] bytes) {
-        Log.i(LOG_TAG, "onBufferReceived: " + bytes);
+//        Log.i(LOG_TAG, "onBufferReceived: " + bytes);
 
     }
 
     @Override
     public void onEndOfSpeech() {
-        Log.i(LOG_TAG, "onEndOfSpeech");
+//        Log.i(LOG_TAG, "onEndOfSpeech");
     }
 
     @Override
@@ -177,32 +175,32 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
     @Override
     public void onResults(Bundle results) {
-        Log.i(LOG_TAG, "onResults");
+//        Log.i(LOG_TAG, "onResults");
         ArrayList<String> matches = results
                 .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = "";
         for (String result : matches)
             text += result + "\n";
-        Log.i(LOG_TAG, "onResults="+text);
+        callbacks.onResults(text);
+//        Log.i(LOG_TAG, "onResults="+text);
         speech.startListening(recognizerIntent);
-
     }
 
     @Override
     public void onPartialResults(Bundle results) {
-        Log.i(LOG_TAG, "onPartialResults");
+//        Log.i(LOG_TAG, "onPartialResults");
         ArrayList<String> matches = results
                 .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = "";
         for (String result : matches)
             text += result + "\n";
         callbacks.onPartialResults(text);
-        Log.i(LOG_TAG, "onPartialResults="+text);
+//        Log.i(LOG_TAG, "onPartialResults="+text);
     }
 
     @Override
     public void onEvent(int i, Bundle bundle) {
-        Log.i(LOG_TAG, "onEvent");
+//        Log.i(LOG_TAG, "onEvent");
 
     }
 
