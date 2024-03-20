@@ -32,7 +32,6 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
         this.callbacks.onReady();
         startRecognizer();
     }
-
     public void startListening() {
         listening = true;
         startRecognizer();
@@ -43,13 +42,21 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
             }
         });
     }
-
     public void stopListening() {
         listening = false;
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 turnOf();
+            }
+        });
+    }
+    public void cancel() {
+        listening = false;
+        mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                speech.cancel();
             }
         });
     }
@@ -72,77 +79,23 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, language);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, maxResults);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-//        recognizerIntent.putExtra(RecognizerIntent.EXTRA_RESULTS, true);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_RESULTS, true);
     }
-
-//    public static MainActivity currentActivity = null;
-
-//    if (isChecked) {
-//        listening = true;
-//        start();
-//        ActivityCompat.requestPermissions
-//                (MainActivity.this,
-//                        new String[]{Manifest.permission.RECORD_AUDIO},
-//                        REQUEST_RECORD_PERMISSION);
-//    } else {
-//        listening = false;
-//        turnOf();
-//    }
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-////        currentActivity = this;
-//        Bridge.onReady();
-//    }
 
     private void turnOf(){
         speech.stopListening();
         speech.destroy();
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode) {
-//            case REQUEST_RECORD_PERMISSION:
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(UnitySpeechRecognizerBridge.this, "start talk...", Toast
-//                            .LENGTH_SHORT).show();
-////                    speech.startListening(recognizerIntent);
-//                } else {
-//                    Toast.makeText(UnitySpeechRecognizerBridge.this, "Permission Denied!", Toast
-//                            .LENGTH_SHORT).show();
-//                }
-//        }
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-////        if (speech != null) {
-////            speech.destroy();
-////            Log.i(LOG_TAG, "destroy");
-////        }
-//    }
-
     @Override
     public void onReadyForSpeech(Bundle bundle) {
+        callbacks.onReadyForSpeech();
 //        Log.i(LOG_TAG, "onReadyForSpeech");
     }
 
     @Override
     public void onBeginningOfSpeech() {
+        callbacks.onBeginningOfSpeech();
 //        Log.i(LOG_TAG, "onBeginningOfSpeech");
     }
 
@@ -162,6 +115,7 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
+        callbacks.onEndOfSpeech();
 //        Log.i(LOG_TAG, "onEndOfSpeech");
     }
 
@@ -241,4 +195,39 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
         }
         return message;
     }
+
+    //    @Override
+    //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    //        switch (requestCode) {
+    //            case REQUEST_RECORD_PERMISSION:
+    //                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    //                    Toast.makeText(UnitySpeechRecognizerBridge.this, "start talk...", Toast
+    //                            .LENGTH_SHORT).show();
+    ////                    speech.startListening(recognizerIntent);
+    //                } else {
+    //                    Toast.makeText(UnitySpeechRecognizerBridge.this, "Permission Denied!", Toast
+    //                            .LENGTH_SHORT).show();
+    //                }
+    //        }
+    //    }
+    //
+    //    @Override
+    //    protected void onResume() {
+    //        super.onResume();
+    //    }
+    //
+    //    @Override
+    //    protected void onPause() {
+    //        super.onPause();
+    //    }
+    //
+    //    @Override
+    //    protected void onStop() {
+    //        super.onStop();
+    ////        if (speech != null) {
+    ////            speech.destroy();
+    ////            Log.i(LOG_TAG, "destroy");
+    ////        }
+    //    }
 }
