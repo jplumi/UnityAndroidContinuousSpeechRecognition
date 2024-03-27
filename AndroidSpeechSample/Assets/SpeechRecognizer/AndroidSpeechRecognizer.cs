@@ -36,10 +36,10 @@ namespace Jplumi.AndroidSpeechRecognizer
         private void Awake()
         {
             Instance = this;
+            CheckPermissions();
             
             callbacks = new BridgeCallbacks("com.jplumi.unitycontinuousspeechrecognition.BridgeCallbacks");
             androidBridge = new AndroidJavaObject("com.jplumi.unitycontinuousspeechrecognition.UnitySpeechRecognizerBridge");
-            CheckPermissions();
 
             Setup();
         }
