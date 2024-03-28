@@ -81,6 +81,11 @@ namespace Jplumi.AndroidSpeechRecognizer
             }
         }
 
+        private void OnDisable()
+        {
+            StopListening();
+        }
+
         private class BridgeCallbacks : AndroidJavaProxy
         {
             public BridgeCallbacks(string javaInterface) : base(javaInterface) {}

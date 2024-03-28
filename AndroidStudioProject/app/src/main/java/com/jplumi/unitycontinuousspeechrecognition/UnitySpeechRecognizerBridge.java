@@ -79,7 +79,7 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
             }
         });
 
-        Log.i(LOG_TAG, "isRecognitionAvailable: " + SpeechRecognizer.isRecognitionAvailable(mainActivity));
+//        Log.i(LOG_TAG, "isRecognitionAvailable: " + SpeechRecognizer.isRecognitionAvailable(mainActivity));
 
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, language);
@@ -98,13 +98,13 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
     @Override
     public void onReadyForSpeech(Bundle bundle) {
         callbacks.onReadyForSpeech();
-        Log.i(LOG_TAG, "onReadyForSpeech");
+//        Log.i(LOG_TAG, "onReadyForSpeech");
     }
 
     @Override
     public void onBeginningOfSpeech() {
         callbacks.onBeginningOfSpeech();
-        Log.i(LOG_TAG, "onBeginningOfSpeech");
+//        Log.i(LOG_TAG, "onBeginningOfSpeech");
     }
 
     @Override
@@ -116,20 +116,19 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
     @Override
     public void onBufferReceived(byte[] bytes) {
-        Log.i(LOG_TAG, "onBufferReceived: " + bytes);
-
+//        Log.i(LOG_TAG, "onBufferReceived: " + bytes);
     }
 
     @Override
     public void onEndOfSpeech() {
         callbacks.onEndOfSpeech();
-        Log.i(LOG_TAG, "onEndOfSpeech");
+//        Log.i(LOG_TAG, "onEndOfSpeech");
     }
 
     @Override
     public void onError(int errorCode) {
         String errorMessage = getErrorText(errorCode);
-        Log.d(LOG_TAG, "FAILED " + errorMessage);
+//        Log.d(LOG_TAG, "FAILED " + errorMessage);
         speech.startListening(recognizerIntent);
         callbacks.onError(errorMessage);
     }
@@ -142,7 +141,7 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
         for (String result : matches)
             text += result + "\n";
         callbacks.onResults(text);
-        Log.i(LOG_TAG, "onResults="+text);
+//        Log.i(LOG_TAG, "onResults="+text);
         speech.startListening(recognizerIntent);
     }
 
@@ -154,7 +153,7 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
         for (String result : matches)
             text += result + "\n";
         callbacks.onPartialResults(text);
-        Log.i(LOG_TAG, "onPartialResults="+text);
+//        Log.i(LOG_TAG, "onPartialResults="+text);
     }
 
     @Override
