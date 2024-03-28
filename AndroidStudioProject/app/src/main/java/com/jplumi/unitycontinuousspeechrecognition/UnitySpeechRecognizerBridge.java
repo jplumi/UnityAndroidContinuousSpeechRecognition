@@ -1,7 +1,9 @@
 package com.jplumi.unitycontinuousspeechrecognition;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -15,13 +17,15 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
     private static final int REQUEST_RECORD_PERMISSION = 100;
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
-    private String LOG_TAG = "VoiceRecognitionActivity";
+    private String LOG_TAG = "SPEECH_RECON_PLUGIN";
     private boolean listening = false;
 
     private BridgeCallbacks callbacks;
     private Activity mainActivity;
     private String language = "en-US";
     private int maxResults;
+
+    private AudioManager audioManager;
 
     // Methods called by Unity
     public void setupRecognizer(Activity mainActivity, BridgeCallbacks callbacks, String language, int maxResults){
@@ -30,6 +34,9 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
         this.language = language;
         this.maxResults = maxResults;
         this.callbacks.onReady();
+
+        setupAudioFocus();
+
         startRecognizer();
     }
     public void startListening() {
@@ -50,6 +57,7 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
                 turnOf();
             }
         });
+        releaseAudioFocus();
     }
     public void cancel() {
         listening = false;
@@ -90,18 +98,17 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
     @Override
     public void onReadyForSpeech(Bundle bundle) {
         callbacks.onReadyForSpeech();
-//        Log.i(LOG_TAG, "onReadyForSpeech");
+        Log.i(LOG_TAG, "onReadyForSpeech");
     }
 
     @Override
     public void onBeginningOfSpeech() {
         callbacks.onBeginningOfSpeech();
-//        Log.i(LOG_TAG, "onBeginningOfSpeech");
+        Log.i(LOG_TAG, "onBeginningOfSpeech");
     }
 
     @Override
     public void onRmsChanged(float rmsdB) {
-//        Log.i(LOG_TAG, "onRmsChanged: " + rmsdB);
         if(!listening){
             turnOf();
         }
@@ -109,14 +116,14 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
     @Override
     public void onBufferReceived(byte[] bytes) {
-//        Log.i(LOG_TAG, "onBufferReceived: " + bytes);
+        Log.i(LOG_TAG, "onBufferReceived: " + bytes);
 
     }
 
     @Override
     public void onEndOfSpeech() {
         callbacks.onEndOfSpeech();
-//        Log.i(LOG_TAG, "onEndOfSpeech");
+        Log.i(LOG_TAG, "onEndOfSpeech");
     }
 
     @Override
@@ -129,33 +136,30 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
     @Override
     public void onResults(Bundle results) {
-//        Log.i(LOG_TAG, "onResults");
         ArrayList<String> matches = results
                 .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = "";
         for (String result : matches)
             text += result + "\n";
         callbacks.onResults(text);
-//        Log.i(LOG_TAG, "onResults="+text);
+        Log.i(LOG_TAG, "onResults="+text);
         speech.startListening(recognizerIntent);
     }
 
     @Override
     public void onPartialResults(Bundle results) {
-//        Log.i(LOG_TAG, "onPartialResults");
         ArrayList<String> matches = results
                 .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = "";
         for (String result : matches)
             text += result + "\n";
         callbacks.onPartialResults(text);
-//        Log.i(LOG_TAG, "onPartialResults="+text);
+        Log.i(LOG_TAG, "onPartialResults="+text);
     }
 
     @Override
     public void onEvent(int i, Bundle bundle) {
-//        Log.i(LOG_TAG, "onEvent");
-
+        Log.i(LOG_TAG, "onEvent");
     }
 
     private String getErrorText(int errorCode) {
@@ -194,6 +198,29 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
                 break;
         }
         return message;
+    }
+
+    private void setupAudioFocus() {
+        audioManager = (AudioManager) mainActivity.getSystemService(Context.AUDIO_SERVICE);
+
+        int result = audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            audioManager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
+            audioManager.setStreamMute(AudioManager.STREAM_ALARM, true);
+            audioManager.setStreamMute(AudioManager.STREAM_RING, true);
+        } else {
+            Log.w(LOG_TAG, "Audio focus request failed. Notification sounds may play during recognition.");
+        }
+    }
+
+    private void releaseAudioFocus() {
+        if(audioManager != null)
+        {
+            audioManager.abandonAudioFocus(null);
+            audioManager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
+            audioManager.setStreamMute(AudioManager.STREAM_ALARM, false);
+            audioManager.setStreamMute(AudioManager.STREAM_RING, false);
+        }
     }
 
     //    @Override
