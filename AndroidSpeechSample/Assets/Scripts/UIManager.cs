@@ -6,6 +6,9 @@ using Jplumi.AndroidSpeechRecognizer;
 public class UiManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text textResult;
+    [SerializeField] private TMP_Text textPartialResult;
+    [SerializeField] private Image beginningImg;
+    [SerializeField] private Image endImg;
     [SerializeField] private Button btn;
 
     private bool isListening = false;
@@ -17,12 +20,32 @@ public class UiManager : MonoBehaviour
         btn.onClick.AddListener(BtnStartStop);
 
         speechRecognizer = AndroidSpeechRecognizer.Instance;
+        speechRecognizer.OnResults += OnResults;
         speechRecognizer.OnPartialResults += OnPartialResults;
+        speechRecognizer.OnBeginningOfSpeech += OnBeginningOfSpeech;
+        speechRecognizer.OnEndOfSpeech += OnEndOfSpeech;
+    }
+
+    private void OnResults(string result)
+    {
+        textResult.text = result;
     }
 
     private void OnPartialResults(string result)
     {
-        textResult.text = result;
+        textPartialResult.text = result;
+    }
+
+    private void OnBeginningOfSpeech()
+    {
+        beginningImg.color = Color.green;
+        endImg.color = Color.red;
+    }
+
+    private void OnEndOfSpeech()
+    {
+        beginningImg.color = Color.red;
+        endImg.color = Color.green;
     }
 
     public void BtnStartStop()
@@ -46,6 +69,8 @@ public class UiManager : MonoBehaviour
 
     private void OnDisable()
     {
-        speechRecognizer.OnPartialResults -= OnPartialResults;    
+        speechRecognizer.OnPartialResults -= OnPartialResults;
+        speechRecognizer.OnBeginningOfSpeech -= OnBeginningOfSpeech;
+        speechRecognizer.OnEndOfSpeech -= OnEndOfSpeech;
     }
 }
