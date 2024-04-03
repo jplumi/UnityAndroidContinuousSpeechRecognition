@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "AndroidSpeechSample.sln"
+    "dotnet.defaultSolution": "UnitySpeechSample.sln"
 }

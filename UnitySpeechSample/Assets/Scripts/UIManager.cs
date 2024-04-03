@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Jplumi.AndroidSpeechRecognizer;
+using Jplumi.SpeechRecognizer;
 
 public class UiManager : MonoBehaviour
 {
@@ -13,13 +13,13 @@ public class UiManager : MonoBehaviour
 
     private bool isListening = false;
 
-    private AndroidSpeechRecognizer speechRecognizer;
+    private SpeechRecognizer speechRecognizer;
 
     private void Start()
     {
         btn.onClick.AddListener(BtnStartStop);
 
-        speechRecognizer = AndroidSpeechRecognizer.Instance;
+        speechRecognizer = SpeechRecognizer.Instance;
         speechRecognizer.OnResults += OnResults;
         speechRecognizer.OnPartialResults += OnPartialResults;
         speechRecognizer.OnBeginningOfSpeech += OnBeginningOfSpeech;

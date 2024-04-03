@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Android;
 
-namespace Jplumi.AndroidSpeechRecognizer
+namespace Jplumi.SpeechRecognizer
 {
-    public class AndroidSpeechRecognizer : MonoBehaviour
+    public class SpeechRecognizer : MonoBehaviour
     {
         [SerializeField]
         private string language = "en-US";
@@ -13,7 +13,7 @@ namespace Jplumi.AndroidSpeechRecognizer
         [SerializeField]
         private int maxResults = 1;
 
-        public static AndroidSpeechRecognizer Instance { get; private set; }
+        public static SpeechRecognizer Instance { get; private set; }
 
         public event Action<string> OnResults;
         public event Action<string> OnPartialResults;
@@ -101,7 +101,7 @@ namespace Jplumi.AndroidSpeechRecognizer
             }
             void onError(string error)
             {
-                // Debug.Log("[RECOGNIZER]: ON ERROR: " + error);
+                
             }
             void onReady()
             {
