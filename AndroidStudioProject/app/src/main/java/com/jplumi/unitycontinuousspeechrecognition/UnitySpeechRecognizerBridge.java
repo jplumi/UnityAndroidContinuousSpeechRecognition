@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 public class UnitySpeechRecognizerBridge implements RecognitionListener {
 
-    private static final int REQUEST_RECORD_PERMISSION = 100;
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
     private String LOG_TAG = "SPEECH_RECON_PLUGIN";
@@ -221,39 +220,4 @@ public class UnitySpeechRecognizerBridge implements RecognitionListener {
             audioManager.setStreamMute(AudioManager.STREAM_RING, false);
         }
     }
-
-    //    @Override
-    //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-    //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    //        switch (requestCode) {
-    //            case REQUEST_RECORD_PERMISSION:
-    //                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-    //                    Toast.makeText(UnitySpeechRecognizerBridge.this, "start talk...", Toast
-    //                            .LENGTH_SHORT).show();
-    ////                    speech.startListening(recognizerIntent);
-    //                } else {
-    //                    Toast.makeText(UnitySpeechRecognizerBridge.this, "Permission Denied!", Toast
-    //                            .LENGTH_SHORT).show();
-    //                }
-    //        }
-    //    }
-    //
-    //    @Override
-    //    protected void onResume() {
-    //        super.onResume();
-    //    }
-    //
-    //    @Override
-    //    protected void onPause() {
-    //        super.onPause();
-    //    }
-    //
-    //    @Override
-    //    protected void onStop() {
-    //        super.onStop();
-    ////        if (speech != null) {
-    ////            speech.destroy();
-    ////            Log.i(LOG_TAG, "destroy");
-    ////        }
-    //    }
 }
